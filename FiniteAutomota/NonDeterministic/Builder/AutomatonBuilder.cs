@@ -1,4 +1,5 @@
-﻿using FiniteAutomota.NonDeterministic.Closure;
+﻿using FiniteAutomota.NonDeterministic.Builder.Exceptions;
+using FiniteAutomota.NonDeterministic.Closure;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +19,13 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
         public Automaton<Descriptor, Symbol> Build()
         {
-            foreach(var transitionToAdd in TransitionsToAdd)
+            var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
+            if (!userDefinedStartStates.Any())
+            {
+                throw new AtLeastOneStartStateRequiredException();
+            }
+
+            foreach (var transitionToAdd in TransitionsToAdd)
             {
                 var source = StatesDefined.FindState(transitionToAdd.Source);
                 var target = StatesDefined.FindState(transitionToAdd.Target);
@@ -26,7 +33,6 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 source.AddEpsilonTransition(target);
             }
 
-            var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
             var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
             var automaton = new Automaton<Descriptor, Symbol>(startStates);
 
