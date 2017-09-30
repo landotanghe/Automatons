@@ -1,13 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using FiniteAutomota.NonDeterministic.Closure;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FiniteAutomota.NonDeterministic.Builder
 {
     public partial class AutomatonBuilder<Descriptor, Symbol> : IAutomatonBuilder<Descriptor, Symbol>
     {
+        private readonly IClosureCalculator _closureCalculator;
+
         private StateDefintionsManager<Descriptor, Symbol> StatesDefined = new StateDefintionsManager<Descriptor, Symbol>();
         private List<AddTransitionStep<Descriptor, Symbol>> TransitionsToAdd = new List<AddTransitionStep<Descriptor, Symbol>>();
-        
+
+        public AutomatonBuilder(IClosureCalculator closureCalculator)
+        {
+            _closureCalculator = closureCalculator;
+        }
+
         public Automaton<Descriptor, Symbol> Build()
         {
             foreach(var transitionToAdd in TransitionsToAdd)
@@ -18,17 +26,10 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 source.AddEpsilonTransition(target);
             }
 
-            var startStates = StatesDefined.UserDefinedStartStates();
-            var closure = startStates.ToList();
-            foreach (var startState in startStates)
-            {
-                //TODO create a IClosureCalculator
-                //TODO add unit tests for it and fix bugs
-                closure.AddRange(startState.GetEpsilonTransitions());
-            }
-            startStates = closure;
-
+            var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
+            var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
             var automaton = new Automaton<Descriptor, Symbol>(startStates);
+
             return automaton;
         }
         
@@ -46,8 +47,11 @@ namespace FiniteAutomota.NonDeterministic.Builder
             return transitionDefintion;
         }
     }
-    
+
     public class AutomatonBuilder : AutomatonBuilder<string, char>
     {
+        public AutomatonBuilder(IClosureCalculator closureCalculator) : base(closureCalculator)
+        {
+        }
     }
 }

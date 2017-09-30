@@ -45,6 +45,8 @@
     <Compile Include="NonDeterministic\Builder\AutomatonBuilder.cs" />
     <Compile Include="NonDeterministic\Builder\Exceptions\UndefinedStateException.cs" />
     <Compile Include="NonDeterministic\Builder\IAutomatonBuilder.cs" />
+    <Compile Include="NonDeterministic\Closure\ClosureCalculator.cs" />
+    <Compile Include="NonDeterministic\Closure\IClosureCalculator.cs" />
     <Compile Include="NonDeterministic\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
