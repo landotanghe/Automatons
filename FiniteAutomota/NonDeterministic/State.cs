@@ -25,6 +25,11 @@ namespace FiniteAutomota.NonDeterministic
         {
             return _epsilonTransitions;
         }
+
+        public override string ToString()
+        {
+            return Description.ToString();
+        }
     }
 
     public class State : State<string, char>

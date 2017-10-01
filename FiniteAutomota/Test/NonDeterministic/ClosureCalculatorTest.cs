@@ -64,7 +64,41 @@ namespace NonDeterministicFiniteAutomataTest.NonDeterministic
             Assert.IsTrue(closure.Contains(a));
             Assert.IsTrue(closure.Contains(b));
         }
+        
+        [TestMethod]
+        public void EpsilonTransitionFromStartState_Indirectly_ToOtherStartState_Closure_StatesAddedOnlyOnce()
+        {
+            var a = new State("a");
+            var b = new State("b");
+            var c = new State("c");
+            a.AddEpsilonTransition(b);
+            b.AddEpsilonTransition(c);
 
+            var closure = _sut.GetClosureFor(new List<State> { a, c });
+
+            Assert.AreEqual(3, closure.Count);
+            Assert.IsTrue(closure.Contains(a));
+            Assert.IsTrue(closure.Contains(b));
+            Assert.IsTrue(closure.Contains(c));
+        }
+        
+        [TestMethod]
+        public void MultipleEpsilonPathsToSameState_Closure_StatesAddedOnlyOnce()
+        {
+            var a = new State("a");
+            var b = new State("b");
+            var c = new State("c");
+            a.AddEpsilonTransition(c);
+            a.AddEpsilonTransition(b);
+            b.AddEpsilonTransition(c);
+
+            var closure = _sut.GetClosureFor(new List<State> { a });
+
+            Assert.AreEqual(3, closure.Count);
+            Assert.IsTrue(closure.Contains(a));
+            Assert.IsTrue(closure.Contains(b));
+            Assert.IsTrue(closure.Contains(c));
+        }
 
         [TestMethod]
         public void EpsilonTransitionChain_Closure_ContainsAllStatesInEpsilonChain()

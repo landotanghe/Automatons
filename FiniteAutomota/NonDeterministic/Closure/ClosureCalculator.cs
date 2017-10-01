@@ -11,27 +11,27 @@ namespace FiniteAutomota.NonDeterministic.Closure
             var statesToAdd = states.ToList();
             while (statesToAdd.Any())
             {
-                var state = statesToAdd.Last();
-                statesToAdd.Remove(state);
-
-                closure.Add(state);
-                FindNewCandidates(closure, statesToAdd, state);
-
+                State<Descriptor, Symbol> state = Pop(statesToAdd);
+                
+                if(!closure.Contains(state))
+                    closure.Add(state);
+                statesToAdd.AddRange(GetUnseenNeighbours(closure, state));
             }
 
             return closure;
         }
 
-        private static void FindNewCandidates<Descriptor, Symbol>(List<State<Descriptor, Symbol>> closure, List<State<Descriptor, Symbol>> statesToAdd, State<Descriptor, Symbol> state)
+        private static State<Descriptor, Symbol> Pop<Descriptor, Symbol>(List<State<Descriptor, Symbol>> statesToAdd)
+        {
+            var state = statesToAdd.Last();
+            statesToAdd.Remove(state);
+            return state;
+        }
+
+        private static IEnumerable<State<Descriptor, Symbol>> GetUnseenNeighbours<Descriptor, Symbol>(List<State<Descriptor, Symbol>> closure, State<Descriptor, Symbol> state)
         {
             var epsilonNeighbours = state.GetEpsilonTransitions();
-            foreach (var neighbour in epsilonNeighbours)
-            {
-                if (!closure.Contains(neighbour))
-                {
-                    statesToAdd.Add(neighbour);
-                }
-            }
+            return epsilonNeighbours.Where(neighbour => !closure.Contains(neighbour));
         }
     }
 }
