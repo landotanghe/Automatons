@@ -6,7 +6,7 @@
         {
             public AutomatonBuilder<Descriptor, Symbol> Builder;
             public Descriptor Source { get; private set; }
-            public Descriptor Target { get; private set; }
+            public Descriptor[] Targets { get; private set; }
 
             public Symbol Trigger { get; set; }
             public bool IsEpsilon { get; set; }
@@ -53,12 +53,26 @@
             {
                 public AddTransitionStep<Descriptor, Symbol> TransitionStep { get; internal set; }
 
-                public IAutomatonBuilder<Descriptor, Symbol> To(Descriptor target)
+                public IAutomatonBuilder<Descriptor, Symbol> To(params Descriptor[] target)
                 {
-                    TransitionStep.Target = target;
+                    TransitionStep.Targets = target;
 
                     return TransitionStep.Builder;
                 }                
+            }
+
+            public void AddToSource(StateDefintionsManager<Descriptor, Symbol> StatesDefined)
+            {
+                var source = StatesDefined.FindState(Source);
+                foreach (var targetDescriptor in (Targets))
+                {
+                    var target = StatesDefined.FindState(targetDescriptor);
+                    if (IsEpsilon)
+                        source.AddEpsilonTransition(target);
+                     else
+                         source.AddTransition(Trigger, target);
+
+                }
             }
         }        
     }

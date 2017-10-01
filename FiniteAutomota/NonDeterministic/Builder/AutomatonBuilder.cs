@@ -25,16 +25,13 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 throw new AtLeastOneStartStateRequiredException();
             }
 
-            foreach (var transitionToAdd in TransitionsToAdd)
+            foreach (var transitions in TransitionsToAdd)
             {
-                var source = StatesDefined.FindState(transitionToAdd.Source);
-                var target = StatesDefined.FindState(transitionToAdd.Target);
-
-                source.AddEpsilonTransition(target);
+                transitions.AddToSource(StatesDefined);
             }
 
             var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
-            var automaton = new Automaton<Descriptor, Symbol>(startStates);
+            var automaton = new Automaton<Descriptor, Symbol>(startStates, _closureCalculator);
 
             return automaton;
         }

@@ -58,7 +58,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="NonDeterministic\NonDeterministicFiniteAutomatonBuilderTest.cs" />
+    <Compile Include="NonDeterministic\NonDeterministicFiniteAutomatonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
