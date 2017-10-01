@@ -3,6 +3,9 @@ using System.Linq;
 using FiniteAutomota.NonDeterministic.Builder;
 using FiniteAutomota.NonDeterministic.Builder.Exceptions;
 using FiniteAutomota.NonDeterministic.Closure;
+using FakeItEasy;
+using FiniteAutomota.NonDeterministic;
+using System.Collections.Generic;
 
 namespace FiniteAutomata.NonDeterministic.Test
 {
@@ -13,12 +16,22 @@ namespace FiniteAutomata.NonDeterministic.Test
         private const string Source = "source";
         private const string Target = "target";
         private const string Closure = "closure";
-        
+
+        public IClosureCalculator _closureCalculator;
+        public AutomatonBuilder _sutWithFakes;
         public AutomatonBuilder _sutWithRealImplementors;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            _closureCalculator = A.Fake<IClosureCalculator>();
+            var fakeClosure = new List<State<string, char>> {
+                new State<string, char>(Closure)
+            };
+            var call = A.CallTo(() => _closureCalculator.GetClosureFor<string, char>(A<IEnumerable<State>>._))
+                        .Returns(fakeClosure);
+
+            _sutWithFakes = new AutomatonBuilder(_closureCalculator);
             _sutWithRealImplementors = new AutomatonBuilder(new ClosureCalculator());
         } 
 
@@ -34,7 +47,21 @@ namespace FiniteAutomata.NonDeterministic.Test
             Assert.AreEqual(1, currentState.Count());
             Assert.AreEqual(Start, currentState.ElementAt(0).Description);
         }
-        
+
+        //[TestMethod]
+        //public void CreatedAutomaton_ClosureForStartStateActive()
+        //{
+        //    var automaton = _sutWithFakes
+        //        .State(Start).ActiveAtStart()
+        //        .Build();
+
+        //    var closrureWtf = _closureCalculator.GetClosureFor(new List<State> { new State("aaa") });
+            
+        //    var currentState = automaton.GetActiveStates();
+        //    Assert.AreEqual(1, currentState.Count());
+        //    Assert.AreEqual(Closure, currentState.ElementAt(0).Description);
+        //}
+
         [TestMethod]
         [ExpectedException(typeof(AtLeastOneStartStateRequiredException))]
         public void CreatedAutomaton_NoStartStateSet_ThrowsNoStartStateException_OnBuild()
@@ -80,7 +107,7 @@ namespace FiniteAutomata.NonDeterministic.Test
         [ExpectedException(typeof(UndefinedStateException))]
         public void CreatedAutomaton_AddTransitionForUnknownTarget_UndefinedStateExceptionThrown()
         {
-            var automaton = _sutWithRealImplementors
+            var automaton = _sutWithFakes
                 .State(Start).ActiveAtStart()
                 .Transition().OnEpsilon().From(Start).To(Target)
                 .Build();

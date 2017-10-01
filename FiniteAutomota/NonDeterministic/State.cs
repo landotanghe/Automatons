@@ -5,9 +5,9 @@ namespace FiniteAutomota.NonDeterministic
     public class State<Descriptor, Symbol>
     {
         public Descriptor Description { get; private set; }
-        public List<State<Descriptor, Symbol>> _epsilonTransitions = new List<State<Descriptor, Symbol>>();
+        internal List<State<Descriptor, Symbol>> _epsilonTransitions = new List<State<Descriptor, Symbol>>();
 
-        public State(Descriptor description)
+        internal State(Descriptor description)
         {
             Description = description;
         }
