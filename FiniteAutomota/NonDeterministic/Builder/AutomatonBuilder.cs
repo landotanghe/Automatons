@@ -12,7 +12,12 @@ namespace FiniteAutomota.NonDeterministic.Builder
         private StateDefintionsManager<Descriptor, Symbol> StatesDefined = new StateDefintionsManager<Descriptor, Symbol>();
         private List<AddTransitionStep<Descriptor, Symbol>> TransitionsToAdd = new List<AddTransitionStep<Descriptor, Symbol>>();
 
-        public AutomatonBuilder(IClosureCalculator closureCalculator)
+        public AutomatonBuilder()
+        {
+            _closureCalculator = new ClosureCalculator();
+        }
+
+        internal AutomatonBuilder(IClosureCalculator closureCalculator)
         {
             _closureCalculator = closureCalculator;
         }
@@ -53,7 +58,11 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
     public class AutomatonBuilder : AutomatonBuilder<string, char>
     {
-        public AutomatonBuilder(IClosureCalculator closureCalculator) : base(closureCalculator)
+        public AutomatonBuilder() : base()
+        {
+        }
+
+        public AutomatonBuilder(IClosureCalculator closureCalculator): base(closureCalculator)
         {
         }
     }

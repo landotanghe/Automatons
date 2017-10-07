@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>lando.tanghe.Compiler.Automata</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>lando</authors>
+    <owners>lando</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Automata that can be used to build a regexp</description>
+    <releaseNotes>Non deterministic automaton added</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Automaton</tags>
+  </metadata>
+</package>

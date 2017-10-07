@@ -56,7 +56,6 @@
                 public IAutomatonBuilder<Descriptor, Symbol> To(params Descriptor[] target)
                 {
                     TransitionStep.Targets = target;
-
                     return TransitionStep.Builder;
                 }                
             }
@@ -71,7 +70,6 @@
                         source.AddEpsilonTransition(target);
                      else
                          source.AddTransition(Trigger, target);
-
                 }
             }
         }        
