@@ -35,9 +35,9 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 return Builder.Transition();
             }
 
-            public Automaton<Descriptor, Symbol> Build()
+            public Automaton<Descriptor, Symbol> Build(Descriptor descriptor = default(Descriptor))
             {
-                return Builder.Build();
+                return Builder.Build(descriptor);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
             _closureCalculator = closureCalculator;
         }
 
-        public Automaton<Descriptor, Symbol> Build()
+        public Automaton<Descriptor, Symbol> Build(Descriptor description = default(Descriptor))
         {
             var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
             if (!userDefinedStartStates.Any())
@@ -36,7 +36,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
             }
 
             var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
-            var automaton = new Automaton<Descriptor, Symbol>(startStates, _closureCalculator);
+            var automaton = new Automaton<Descriptor, Symbol>(startStates, _closureCalculator, description);
 
             return automaton;
         }

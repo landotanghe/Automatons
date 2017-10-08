@@ -12,7 +12,7 @@ namespace FiniteAutomota.NonDeterministic
         {
             Description = description;
         }
-
+        
         internal void AddEpsilonTransition(State<Descriptor, Symbol> target)
         {
             _epsilonTransitions.Add(target);

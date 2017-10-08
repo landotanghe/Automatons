@@ -3,7 +3,7 @@ using FiniteAutomota.NonDeterministic.Closure;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
-namespace NonDeterministicFiniteAutomataTest.NonDeterministic
+namespace FiniteAutomata.Test.NonDeterministic
 {
     [TestClass]
     public class ClosureCalculatorTest
@@ -64,7 +64,7 @@ namespace NonDeterministicFiniteAutomataTest.NonDeterministic
             Assert.IsTrue(closure.Contains(a));
             Assert.IsTrue(closure.Contains(b));
         }
-        
+
         [TestMethod]
         public void EpsilonTransitionFromStartState_Indirectly_ToOtherStartState_Closure_StatesAddedOnlyOnce()
         {
@@ -81,7 +81,7 @@ namespace NonDeterministicFiniteAutomataTest.NonDeterministic
             Assert.IsTrue(closure.Contains(b));
             Assert.IsTrue(closure.Contains(c));
         }
-        
+
         [TestMethod]
         public void MultipleEpsilonPathsToSameState_Closure_StatesAddedOnlyOnce()
         {

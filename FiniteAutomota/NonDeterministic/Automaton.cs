@@ -6,15 +6,17 @@ namespace FiniteAutomota.NonDeterministic
 {
     public class Automaton<Descriptor, Symbol>
     {
+        public Descriptor Description { get; }
         private List<State<Descriptor, Symbol>> CurrentStates;
         private readonly IClosureCalculator _closureCalculator;
         
-        public Automaton(IEnumerable<State<Descriptor, Symbol>> startStates, IClosureCalculator closureCalculator)
+        public Automaton(IEnumerable<State<Descriptor, Symbol>> startStates, IClosureCalculator closureCalculator, Descriptor description)
         {
             CurrentStates = new List<State<Descriptor, Symbol>>();
             CurrentStates.AddRange(startStates);
 
             _closureCalculator = closureCalculator;
+            Description = description;
         }
 
         public IEnumerable<State<Descriptor, Symbol>> GetActiveStates()
@@ -35,7 +37,7 @@ namespace FiniteAutomota.NonDeterministic
 
     public class Automaton : Automaton<string, char>
     {
-        public Automaton(IEnumerable<State<string, char>> startStates, IClosureCalculator closureCalculator) : base(startStates, closureCalculator)
+        public Automaton(IEnumerable<State<string, char>> startStates, IClosureCalculator closureCalculator, string description) : base(startStates, closureCalculator, description)
         {
         }
     }

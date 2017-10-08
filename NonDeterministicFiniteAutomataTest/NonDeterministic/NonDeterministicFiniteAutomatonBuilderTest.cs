@@ -7,7 +7,7 @@ using FakeItEasy;
 using FiniteAutomota.NonDeterministic;
 using System.Collections.Generic;
 
-namespace FiniteAutomata.NonDeterministic.Test
+namespace FiniteAutomata.Test.NonDeterministic
 {
     [TestClass]
     public class NonDeterministicFiniteAutomatonBuilderTest
@@ -33,7 +33,7 @@ namespace FiniteAutomata.NonDeterministic.Test
 
             _sutWithFakes = new AutomatonBuilder(_closureCalculator);
             _sutWithRealImplementors = new AutomatonBuilder(new ClosureCalculator());
-        } 
+        }
 
         [TestMethod]
         public void CreatedAutomaton_WithMultipleStates_StartStateActive()
@@ -56,7 +56,7 @@ namespace FiniteAutomata.NonDeterministic.Test
         //        .Build();
 
         //    var closrureWtf = _closureCalculator.GetClosureFor(new List<State> { new State("aaa") });
-            
+
         //    var currentState = automaton.GetActiveStates();
         //    Assert.AreEqual(1, currentState.Count());
         //    Assert.AreEqual(Closure, currentState.ElementAt(0).Description);
@@ -96,13 +96,13 @@ namespace FiniteAutomata.NonDeterministic.Test
                 .State(Target)
                 .Transition().OnEpsilon().From(Start).To(Target)
                 .Build();
-            
+
             var currentState = automaton.GetActiveStates();
             Assert.AreEqual(2, currentState.Count());
             Assert.AreEqual(Start, currentState.ElementAt(0).Description);
             Assert.AreEqual(Target, currentState.ElementAt(1).Description);
         }
-        
+
         [TestMethod]
         [ExpectedException(typeof(UndefinedStateException))]
         public void CreatedAutomaton_AddTransitionForUnknownTarget_UndefinedStateExceptionThrown()

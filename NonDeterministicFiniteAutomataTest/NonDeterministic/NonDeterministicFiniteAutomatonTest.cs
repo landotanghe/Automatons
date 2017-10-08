@@ -4,10 +4,10 @@ using FiniteAutomota.NonDeterministic.Builder;
 using FiniteAutomota.NonDeterministic.Builder.Exceptions;
 using FiniteAutomota.NonDeterministic.Closure;
 
-namespace FiniteAutomata.NonDeterministic.Test
+namespace FiniteAutomata.Test.NonDeterministic
 {
     [TestClass]
-    public class NonDeterministicFiniteAutomatonBuilderTest
+    public class NonDeterministicFiniteAutomatonTest
     {
         private const string Start = "start";
         private const string Source1 = "source1";
