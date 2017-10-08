@@ -2,6 +2,7 @@
 using FiniteAutomota.NonDeterministic.Closure;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace FiniteAutomota.NonDeterministic.Builder
 {
@@ -53,7 +54,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
             var transitionDefintion = new AddTransitionStep<Descriptor, Symbol>(this);
             TransitionsToAdd.Add(transitionDefintion);
             return transitionDefintion;
-        }
+        }        
     }
 
     public class AutomatonBuilder : AutomatonBuilder<string, char>

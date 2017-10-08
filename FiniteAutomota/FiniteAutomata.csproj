@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NonDeterministic\Automaton.cs" />
-    <Compile Include="NonDeterministic\Builder\AutomatonBuilder.AddTransitionStep.cs" />
+    <Compile Include="NonDeterministic\Builder\AddTransitionStep.cs" />
     <Compile Include="NonDeterministic\Builder\AutomatonBuilder.cs" />
     <Compile Include="NonDeterministic\Builder\Exceptions\AtLeastOneStartStateRequiredException.cs" />
     <Compile Include="NonDeterministic\Builder\Exceptions\UndefinedStateException.cs" />
@@ -57,10 +57,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NonDeterministic\Builder\AutomatonBuilder.AddStateStep.cs" />
+    <Compile Include="NonDeterministic\Builder\AddStateStep.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NonDeterministic\Builder\AutomationBuilder.StatesManager.cs" />
+    <Compile Include="NonDeterministic\Builder\StateDefinitionsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
