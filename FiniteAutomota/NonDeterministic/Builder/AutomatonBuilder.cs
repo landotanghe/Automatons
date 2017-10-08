@@ -11,7 +11,6 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
         private StateDefintionsManager<Descriptor, Symbol> StatesDefined = new StateDefintionsManager<Descriptor, Symbol>();
         private List<AddTransitionStep<Descriptor, Symbol>> TransitionsToAdd = new List<AddTransitionStep<Descriptor, Symbol>>();
-        private List<AddSubSequenceStep<Descriptor, Symbol>> SubsequencesToAdd = new List<AddSubSequenceStep<Descriptor, Symbol>>();
 
         public AutomatonBuilder()
         {
@@ -59,8 +58,12 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
         public IAutomatonBuilder<Descriptor, Symbol> SubSequence(IAutomatonBuilder<Descriptor, Symbol> subSequence, Descriptor description)
         {
-            var subSequenceStep = new AddSubSequenceStep<Descriptor, Symbol>();
-            SubsequencesToAdd.Add(subSequenceStep);
+            var subSequenceStep = new AddSubSequenceStep<Descriptor, Symbol>
+            {
+                SubSequenceBuilder = subSequence,
+                Description = description
+            };
+            StatesDefined.AddSubsequence(subSequenceStep);
             return this;
         }
     }
