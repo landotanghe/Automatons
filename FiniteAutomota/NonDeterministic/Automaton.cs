@@ -6,26 +6,29 @@ namespace FiniteAutomota.NonDeterministic
 {
     public class Automaton<Descriptor, Symbol>
     {
-        public Descriptor Description { get; }
         private List<State<Descriptor, Symbol>> CurrentStates;
-        private List<State<Descriptor, Symbol>> StartStates;
+        private readonly List<State<Descriptor, Symbol>> _startStates;
+        private readonly List<State<Descriptor, Symbol>> _acceptingStates;
         private readonly IClosureCalculator _closureCalculator;
         
-        public Automaton(IEnumerable<State<Descriptor, Symbol>> startStates, IClosureCalculator closureCalculator, Descriptor description)
+        public Automaton(IEnumerable<State<Descriptor, Symbol>> startStates, IEnumerable<State<Descriptor, Symbol>> acceptingStates, IClosureCalculator closureCalculator)
         {
-            StartStates = startStates.AsEnumerable().ToList();
+            _startStates = startStates.ToList();
+            _acceptingStates = acceptingStates.ToList();
             Reset();
 
             _closureCalculator = closureCalculator;
-            Description = description;
         }
         
+        internal List<State<Descriptor, Symbol>> StartStates => _startStates;
+        internal List<State<Descriptor, Symbol>> FinalStates => _acceptingStates;
+
         public void Reset()
         {
-            CurrentStates = StartStates.AsEnumerable().ToList();
+            CurrentStates = _startStates.AsEnumerable().ToList();
         }
 
-        public IEnumerable<State<Descriptor, Symbol>> GetActiveStates()
+        internal IEnumerable<State<Descriptor, Symbol>> GetActiveStates()
         {
             return CurrentStates;
         }
@@ -39,11 +42,16 @@ namespace FiniteAutomota.NonDeterministic
 
             CurrentStates = _closureCalculator.GetClosureFor(nextStates);
         }
+
+        public bool IsAccepted()
+        {
+            return CurrentStates.Any(state => _acceptingStates.Contains(state));
+        }
     }
 
     public class Automaton : Automaton<string, char>
     {
-        public Automaton(IEnumerable<State<string, char>> startStates, IClosureCalculator closureCalculator, string description) : base(startStates, closureCalculator, description)
+        public Automaton(IEnumerable<State<string, char>> startStates, IEnumerable<State<string, char>> acceptingStates, IClosureCalculator closureCalculator) : base(startStates, acceptingStates, closureCalculator)
         {
         }
     }

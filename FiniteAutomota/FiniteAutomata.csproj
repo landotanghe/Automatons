@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NonDeterministic\Automaton.cs" />
+    <Compile Include="NonDeterministic\Builder\AddSubSequenceStep.cs" />
     <Compile Include="NonDeterministic\Builder\AddTransitionStep.cs" />
     <Compile Include="NonDeterministic\Builder\AutomatonBuilder.cs" />
     <Compile Include="NonDeterministic\Builder\Exceptions\AtLeastOneStartStateRequiredException.cs" />

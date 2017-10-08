@@ -2,7 +2,6 @@
 using FiniteAutomota.NonDeterministic.Closure;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace FiniteAutomota.NonDeterministic.Builder
 {
@@ -12,6 +11,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
         private StateDefintionsManager<Descriptor, Symbol> StatesDefined = new StateDefintionsManager<Descriptor, Symbol>();
         private List<AddTransitionStep<Descriptor, Symbol>> TransitionsToAdd = new List<AddTransitionStep<Descriptor, Symbol>>();
+        private List<AddSubSequenceStep<Descriptor, Symbol>> SubsequencesToAdd = new List<AddSubSequenceStep<Descriptor, Symbol>>();
 
         public AutomatonBuilder()
         {
@@ -23,7 +23,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
             _closureCalculator = closureCalculator;
         }
 
-        public Automaton<Descriptor, Symbol> Build(Descriptor description = default(Descriptor))
+        public Automaton<Descriptor, Symbol> Build()
         {
             var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
             if (!userDefinedStartStates.Any())
@@ -37,7 +37,8 @@ namespace FiniteAutomota.NonDeterministic.Builder
             }
 
             var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
-            var automaton = new Automaton<Descriptor, Symbol>(startStates, _closureCalculator, description);
+            var finalSTates = StatesDefined.FinalStates();
+            var automaton = new Automaton<Descriptor, Symbol>(startStates, finalSTates, _closureCalculator);
 
             return automaton;
         }
@@ -54,7 +55,14 @@ namespace FiniteAutomota.NonDeterministic.Builder
             var transitionDefintion = new AddTransitionStep<Descriptor, Symbol>(this);
             TransitionsToAdd.Add(transitionDefintion);
             return transitionDefintion;
-        }        
+        }
+
+        public IAutomatonBuilder<Descriptor, Symbol> SubSequence(IAutomatonBuilder<Descriptor, Symbol> subSequence, Descriptor description)
+        {
+            var subSequenceStep = new AddSubSequenceStep<Descriptor, Symbol>();
+            SubsequencesToAdd.Add(subSequenceStep);
+            return this;
+        }
     }
 
     public class AutomatonBuilder : AutomatonBuilder<string, char>

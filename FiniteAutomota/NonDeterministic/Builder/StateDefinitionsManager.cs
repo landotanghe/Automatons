@@ -37,5 +37,13 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 .Select(state => state.StateToBuild)
                 .ToList();
         }
+
+        public List<State<Descriptor, Symbol>> FinalStates()
+        {
+            return StatesToAdd
+                .Where(state => state.IsFinal)
+                .Select(state => state.StateToBuild)
+                .ToList();
+        }
     }
 }

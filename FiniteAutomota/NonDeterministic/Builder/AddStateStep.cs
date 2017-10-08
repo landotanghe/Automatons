@@ -1,11 +1,11 @@
-﻿
-namespace FiniteAutomota.NonDeterministic.Builder
+﻿namespace FiniteAutomota.NonDeterministic.Builder
 {
     public class AddStateStep<Descriptor, Symbol> : IAutomatonBuilder<Descriptor, Symbol>
     {
-        public AutomatonBuilder<Descriptor, Symbol> Builder;
-        public State<Descriptor, Symbol> StateToBuild;
-        public bool IsActiveAtStart = false;
+        internal AutomatonBuilder<Descriptor, Symbol> Builder;
+        internal State<Descriptor, Symbol> StateToBuild;
+        internal bool IsActiveAtStart = false;
+        internal bool IsFinal = false;
 
         public AddStateStep(Descriptor description, AutomatonBuilder<Descriptor, Symbol> builder)
         {
@@ -19,6 +19,12 @@ namespace FiniteAutomota.NonDeterministic.Builder
             return this;
         }
 
+        public AddStateStep<Descriptor, Symbol> Final()
+        {
+            IsFinal = true;
+            return this;
+        }
+
         public AddStateStep<Descriptor, Symbol> State(Descriptor description)
         {
             return Builder.State(description);
@@ -29,9 +35,14 @@ namespace FiniteAutomota.NonDeterministic.Builder
             return Builder.Transition();
         }
 
-        public Automaton<Descriptor, Symbol> Build(Descriptor descriptor = default(Descriptor))
+        public Automaton<Descriptor, Symbol> Build()
         {
-            return Builder.Build(descriptor);
+            return Builder.Build();
+        }
+
+        public IAutomatonBuilder<Descriptor, Symbol> SubSequence(IAutomatonBuilder<Descriptor, Symbol> subSequence, Descriptor description)
+        {
+            return Builder.SubSequence(subSequence, description);
         }
     }
 }
