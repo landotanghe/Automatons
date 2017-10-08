@@ -66,8 +66,8 @@
                 var target = StatesDefined.FindState(targetDescriptor);
                 if (IsEpsilon)
                     source.AddEpsilonTransition(target);
-                    else
-                        source.AddTransition(Trigger, target);
+                else
+                    source.AddTransition(Trigger, target);
             }
         }    
     }
