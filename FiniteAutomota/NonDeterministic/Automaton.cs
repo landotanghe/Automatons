@@ -36,7 +36,7 @@ namespace FiniteAutomota.NonDeterministic
         public void Process(Symbol symbol)
         {
             var nextStates = CurrentStates
-                .Select(state => state.GetTransitionsFor(symbol))
+                .Select(state => state.GetTransitionFor(symbol))
                 .SelectMany(state => state)
                 .Distinct();
 

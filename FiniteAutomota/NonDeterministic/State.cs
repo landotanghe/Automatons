@@ -38,7 +38,12 @@ namespace FiniteAutomota.NonDeterministic
             return Description.ToString();
         }
 
-        internal List<State<Descriptor, Symbol>> GetTransitionsFor(Symbol symbol)
+        internal IEnumerable<Symbol> GetKnownSymbols()
+        {
+            return _transitions.Keys;
+        }
+
+        internal List<State<Descriptor, Symbol>> GetTransitionFor(Symbol symbol)
         {
             if (! _transitions.ContainsKey(symbol))
             {
