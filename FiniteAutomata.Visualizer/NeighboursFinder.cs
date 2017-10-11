@@ -1,11 +1,12 @@
 ﻿using FiniteAutomota.NonDeterministic;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FiniteAutomata.Visualizer
 {
     public class NeighboursFinder<Descriptor, Symbol>
     {
-        public IEnumerable<Neighbour<Descriptor, Symbol>> GetNeighbours(State<Descriptor, Symbol> state)
+        public List<Neighbour<Descriptor, Symbol>> GetNeighbours(State<Descriptor, Symbol> state)
         {
             var symbols = state.GetKnownSymbols();
             var neighbours = new Dictionary<State<Descriptor, Symbol>, Neighbour<Descriptor, Symbol>>();
@@ -21,23 +22,43 @@ namespace FiniteAutomata.Visualizer
                     neighbours[nextState].AddSymbol(symbol);
                 }
             }
-            return neighbours.Values;
+
+            var epsilonTransition = state.GetEpsilonTransitions();
+            foreach (var nextState in epsilonTransition)
+            {
+                if (!neighbours.ContainsKey(nextState))
+                {
+                    neighbours.Add(nextState, new Neighbour<Descriptor, Symbol>(nextState));
+                }
+                neighbours[nextState].AddEpsilon();
+            }
+
+            return neighbours.Values.ToList();
         }
     }
 
     public class Neighbour<Descriptor, Symbol>
     {
+        private State<Descriptor, Symbol> _state;
+        private List<Symbol> _symbols;
+        private bool _isEpsilonIncluded;
+
         public Neighbour(State<Descriptor, Symbol> state){
             _state = state;
             _symbols = new List<Symbol>();
+            _isEpsilonIncluded = false;
         }
-
-        private State<Descriptor, Symbol> _state { get; set; }
-        private List<Symbol> _symbols { get; set; }
-
+        
         public void AddSymbol(Symbol symbol)
         {
             _symbols.Add(symbol);
         }
+
+        public void AddEpsilon()
+        {
+            _isEpsilonIncluded = true;
+        }
+
+        public Descriptor Description => _state.Description;
     }
 }
