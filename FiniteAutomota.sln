@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiniteAutomata", "FiniteAut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiniteAutomata.Test", "NonDeterministicFiniteAutomataTest\FiniteAutomata.Test.csproj", "{51BFA230-F20C-4698-A869-106521F844E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiniteAutomata.Visualizer", "FiniteAutomata.Visualizer\FiniteAutomata.Visualizer.csproj", "{05573ADD-EEEF-4152-ABD9-101134CD7E04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestVisualizer", "TestVisualizer\TestVisualizer.csproj", "{FDB4965E-BDA6-4BE8-A23C-0156AF838189}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{51BFA230-F20C-4698-A869-106521F844E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51BFA230-F20C-4698-A869-106521F844E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51BFA230-F20C-4698-A869-106521F844E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05573ADD-EEEF-4152-ABD9-101134CD7E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05573ADD-EEEF-4152-ABD9-101134CD7E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05573ADD-EEEF-4152-ABD9-101134CD7E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05573ADD-EEEF-4152-ABD9-101134CD7E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB4965E-BDA6-4BE8-A23C-0156AF838189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB4965E-BDA6-4BE8-A23C-0156AF838189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB4965E-BDA6-4BE8-A23C-0156AF838189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB4965E-BDA6-4BE8-A23C-0156AF838189}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

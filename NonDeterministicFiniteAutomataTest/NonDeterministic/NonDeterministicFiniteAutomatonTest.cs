@@ -9,7 +9,8 @@ namespace FiniteAutomata.Test.NonDeterministic
     [TestClass]
     public class NonDeterministicFiniteAutomatonTest
     {
-        private const string Subsequence = "Subsequence";
+        private const string Subsequence1 = "Subsequence1";
+        private const string Subsequence2 = "Subsequence2";
         private const string Start = "start";
         private const string Source1 = "source1";
         private const string Source2 = "source2";
@@ -183,13 +184,43 @@ namespace FiniteAutomata.Test.NonDeterministic
             var automaton = CreateBuilder()
                 .State(Start).ActiveAtStart()
                 .State(Target1).Final()
-                .SubSequence(subSequence, Subsequence)
-                .Transition().On('a').From(Start).To(Subsequence)
-                .Transition().On('c').From(Subsequence).To(Target1)
+                .SubSequence(subSequence, Subsequence1)
+                .Transition().On('a').From(Start).To(Subsequence1)
+                .Transition().On('c').From(Subsequence1).To(Target1)
                 .Build();
 
             Assert.IsFalse(automaton.IsAccepted());
             automaton.Process('a');
+            Assert.IsFalse(automaton.IsAccepted());
+            automaton.Process('b');
+            Assert.IsFalse(automaton.IsAccepted());
+            automaton.Process('c');
+            Assert.IsTrue(automaton.IsAccepted());
+        }
+
+
+        [TestMethod]
+        public void CreatedAutomaton_AddSubsequenceMultipleTimes()
+        {
+            var subSequence = CreateBuilder()
+                .State(Start).ActiveAtStart()
+                .State(Target1).Final()
+                .Transition().On('b').From(Start).To(Target1);
+
+            var automaton = CreateBuilder()
+                .State(Start).ActiveAtStart()
+                .State(Target1).Final()
+                .SubSequence(subSequence, Subsequence1)
+                .SubSequence(subSequence, Subsequence2)
+                .Transition().On('a').From(Start).To(Subsequence1)
+                .Transition().OnEpsilon().From(Subsequence1).To(Subsequence2)
+                .Transition().On('c').From(Subsequence1).To(Target1)
+                .Build();
+
+            Assert.IsFalse(automaton.IsAccepted());
+            automaton.Process('a');
+            Assert.IsFalse(automaton.IsAccepted());
+            automaton.Process('b');
             Assert.IsFalse(automaton.IsAccepted());
             automaton.Process('b');
             Assert.IsFalse(automaton.IsAccepted());
