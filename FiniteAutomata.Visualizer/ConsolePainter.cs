@@ -47,21 +47,24 @@ namespace FiniteAutomata.Visualizer
         private void DrawWarpedArrow(int row1, int col1, int row2, int col2, int depth)
         {
             var deepestRow = row1 + depth;
-            DrawVerticalLine(row1, deepestRow, col1);
-            DrawVerticalLine(row2, deepestRow, col2);
-            DrawHorizontalLine(deepestRow, col1, col2);
 
             if(depth == 0)
             {
+                DrawHorizontalLine(deepestRow, col1, col2);
                 Draw(row2, col2 - 1, '>');
             }
-            else if(depth < 0)
+            else if (depth < 0)
             {
-                Draw(row2, col2, 'v');
-            }
-            else
+                DrawVerticalLine(row1, deepestRow, col1);
+                DrawVerticalLine(row2, deepestRow + 1, col2);
+                DrawHorizontalLine(deepestRow, col1, col2 + 1);
+                Draw(row2, col2, '/');
+            }else
             {
-                Draw(row2, col2, '^');
+                DrawVerticalLine(row1, deepestRow, col1);
+                DrawVerticalLine(row2, deepestRow - 1, col2);
+                DrawHorizontalLine(deepestRow, col1, col2 - 1);
+                Draw(row2, col2, '/');
             }
         }
 

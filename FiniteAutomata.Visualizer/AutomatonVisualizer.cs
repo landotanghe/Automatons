@@ -114,19 +114,20 @@ namespace FiniteAutomata.Visualizer
                 Source = source;
                 Target = target;
                 Neighbour = neighbour;
+                Depth = depth;
             }
             
             public int Width => Neighbour.Width + 4;
 
             public void Draw(IPainter painter)
             {
-                if(Source.Row== Target.Row)
+                if(Source.Row == Target.Row && Depth == 0)
                 {
                     painter.DrawWarpedArrow(Source.Row, Source.Column.X + Source.Column.Width + 2, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }
                 else
                 {
-                    painter.DrawWarpedArrow(Source.Row, Source.Column.X, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                    painter.DrawWarpedArrow(Source.Row + 1, Source.Column.X, Target.Row + 1, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }
             }
         }
@@ -156,7 +157,7 @@ namespace FiniteAutomata.Visualizer
             }
 
             private List<Arrow> _arrows = new List<Arrow>();
-            private int firstFreeRow = 0;
+            private List<Arrow> _backArrows = new List<Arrow>();//TODO use this
 
             public void Add(StatesColumn target, Neighbour neighbour)
             {

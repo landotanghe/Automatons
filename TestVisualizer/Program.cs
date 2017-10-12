@@ -13,6 +13,7 @@ namespace TestVisualizer
                 .State("b").Final()
                 .Transition().On('y').From("b").To("c")
                 .State("c")
+                .Transition().On('z').From("a").To("c")
                 .Build();
             var visualizer = new AutomatonVisualizer();
             visualizer.Visualize(automaton);
