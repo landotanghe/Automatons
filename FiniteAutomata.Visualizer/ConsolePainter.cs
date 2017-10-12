@@ -107,5 +107,12 @@ namespace FiniteAutomata.Visualizer
             Console.BackgroundColor = back;
             Console.Write(character);
         }
+
+        public void DrawNode(int row, int col, string description)
+        {
+            Console.CursorTop = row;
+            Console.CursorLeft = col;
+            Console.Write($"({description})");
+        }
     }
 }

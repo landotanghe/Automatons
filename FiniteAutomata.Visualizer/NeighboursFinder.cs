@@ -41,12 +41,12 @@ namespace FiniteAutomata.Visualizer
     {
         public State<string, char> State;
         public List<char> Symbols;
-        private bool _isEpsilonIncluded;
+        public bool IsEpsilonIncluded { get; private set; }
 
         public Neighbour(State<string, char> state){
             State = state;
             Symbols = new List<char>();
-            _isEpsilonIncluded = false;
+            IsEpsilonIncluded = false;
         }
         
         public void AddSymbol(char symbol)
@@ -56,11 +56,11 @@ namespace FiniteAutomata.Visualizer
 
         public void AddEpsilon()
         {
-            _isEpsilonIncluded = true;
+            IsEpsilonIncluded = true;
         }
 
         public string Description => State.Description;
 
-        public int Width => Description.Length + 4 + Symbols.Count + (_isEpsilonIncluded ? 1 : 0);
+        public int Width => Description.Length + 4 + Symbols.Count + (IsEpsilonIncluded ? 1 : 0);
     }
 }

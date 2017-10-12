@@ -54,6 +54,10 @@
       <Project>{05573ADD-EEEF-4152-ABD9-101134CD7E04}</Project>
       <Name>FiniteAutomata.Visualizer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FiniteAutomota\FiniteAutomata.csproj">
+      <Project>{15430488-B2D9-414C-9C6A-3C0B148EB5A6}</Project>
+      <Name>FiniteAutomata</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

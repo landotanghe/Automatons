@@ -1,15 +1,16 @@
 ﻿using FiniteAutomota.NonDeterministic;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace FiniteAutomata.Visualizer
 {
     public class AutomatonVisualizer
     {
-        public void Visualize(Automaton Automaton)
+        public void Visualize(Automaton<string,char> automaton)
         {
             var gridBuilder = new GridBuilder();
-            var grid = gridBuilder.Build(Automaton);
+            var grid = gridBuilder.Build(automaton);
             grid.Draw();
         }
         
@@ -21,7 +22,7 @@ namespace FiniteAutomata.Visualizer
 
             private StatesGrid Grid = new StatesGrid();
 
-            public StatesGrid Build(Automaton automaton)
+            public StatesGrid Build(Automaton<string,char> automaton)
             {
                 foreach (var startingState in automaton.StartStates)
                 {
@@ -43,11 +44,10 @@ namespace FiniteAutomata.Visualizer
                 for(int i=0; i< neighbours.Count; i++)
                 {
                     var neighbour = neighbours[i];
-                    Grid.Column(depth).Add(new Cell
-                    {
-                        Neighbour = neighbour,
-                        IsFirstOccurence = HasVisited(state)
-                    });
+                    var column = Grid.Column(state);
+                    var target = Grid.Column(neighbour.State);
+                    column.Add(target, neighbour);
+
                     Visit(neighbour.State, depth+1);
                 }
             }
@@ -57,43 +57,131 @@ namespace FiniteAutomata.Visualizer
 
         public class StatesGrid{
             private Dictionary<int, StatesColumn> _columns = new Dictionary<int, StatesColumn>();
+            private Dictionary<StatesColumn, int> _columnsIndex = new Dictionary<StatesColumn, int>();
             private IPainter _painter = new ConsolePainter();
 
-            public StatesColumn Column(int i)
+            private int _currentRow = 3;
+
+            public void StartNextRow()
             {
-                if (!_columns.ContainsKey(i))
+                _currentRow++;
+            }
+
+            public StatesColumn Column(State<string,char> state)
+            {
+                var column = _columnsIndex.Select(c => c.Key).FirstOrDefault(c => c.State == state);
+                if (column == null)
                 {
-                    _columns.Add(i, new StatesColumn());
+                    var index = _columns.Count;
+                    column = new StatesColumn(state, this, _currentRow);
+                    _columns.Add(index, column);
+                    _columnsIndex.Add(column, index);
                 }
-                return _columns[i];
+                return column;
             }
 
             public void Draw()
             {
-                foreach(var column in _columns)
+                foreach(var column in _columns.Values)
                 {
-
+                    column.Draw(_painter);
                 }
+            }
+
+            internal int GetX(StatesColumn column)
+            {
+                var index = _columnsIndex[column];
+
+                var totalWidth = 0;
+                for(int i=0; i< index; i++)
+                {
+                    totalWidth += _columns[i].Width;
+                }
+                return totalWidth;
             }
         }
 
-        public class Cell
+
+        public class Arrow
         {
-            public Neighbour Neighbour { get; set; }
-            public bool IsFirstOccurence { get; set; } //to determine if this cell is visualized or only its incoming edge is shown, still need to find where firstOccurence is as the incoming edge will point there
+            public ArrowBase Source { get; }
+            public ArrowHead Target { get; }
+            public Neighbour Neighbour { get; }
+            public int Depth { get; }
+
+            public Arrow(ArrowBase source, ArrowHead target, Neighbour neighbour, int depth)
+            {
+                Source = source;
+                Target = target;
+                Neighbour = neighbour;
+            }
+            
             public int Width => Neighbour.Width;
+
+            public void Draw(IPainter painter)
+            {
+                painter.DrawWarpedArrow(Source.Row, Source.Column.X, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+            }
+        }
+        
+        public class ArrowBase
+        {
+            public StatesColumn Column { get; set; }
+            public int Row { get; set; }
+        }
+
+        public class ArrowHead
+        {
+            public StatesColumn Column { get; set; }
+            public int Row { get; set; }
         }
 
         public class StatesColumn
         {
-            public List<Cell> Cells = new List<Cell>();
-
-            public void Add(Cell cell)
+            public State<string,char> State;
+            private StatesGrid _grid;
+            private int _row;
+            public StatesColumn(State<string,char> state, StatesGrid grid, int row)
             {
-                Cells.Add(cell);
+                State = state;
+                _grid = grid;
+                _row = row;
             }
 
-            public int Width => Cells.Select(cell => cell.Width).Max();
+            private List<Arrow> _arrows = new List<Arrow>();
+            private int firstFreeRow = 0;
+
+            public void Add(StatesColumn target, Neighbour neighbour)
+            {
+                var arrowBase = new ArrowBase
+                {
+                    Column = this,
+                    Row = _row - 1
+                };
+
+                var arrowHead = new ArrowHead
+                {
+                    Column = target,
+                    Row = target._row - 1
+                };
+
+                var arrow = new Arrow(arrowBase, arrowHead, neighbour, _arrows.Count());
+
+                _arrows.Add(arrow);
+            }
+
+            public int X => _grid.GetX(this);
+
+            public int Width => _arrows.Select(cell => cell.Width).Max();
+
+            public void Draw(IPainter painter)
+            {
+                painter.DrawNode(_row, X, State.Description);
+                foreach(var arrow in _arrows)
+                {
+                    arrow.Draw(painter);
+                }
+            }
         }
     }
 }
