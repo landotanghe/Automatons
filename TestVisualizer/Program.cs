@@ -14,6 +14,7 @@ namespace TestVisualizer
                 .Transition().On('y').From("b").To("c")
                 .State("c")
                 .Transition().On('z').From("a").To("c")
+                .Transition().OnEpsilon().From("c").To("a")
                 .Build();
             var visualizer = new AutomatonVisualizer();
             visualizer.Visualize(automaton);

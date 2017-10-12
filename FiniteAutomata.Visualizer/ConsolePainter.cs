@@ -16,7 +16,7 @@ namespace FiniteAutomata.Visualizer
                 DrawSymbols(row1 + depth, col1 + 1, symbols, epsilon);
             }else
             {
-                DrawSymbols(row2, col2 + 2, symbols, epsilon);
+                DrawSymbols(row2 - 1, col2 + 2, symbols, epsilon);
             }
         }
 

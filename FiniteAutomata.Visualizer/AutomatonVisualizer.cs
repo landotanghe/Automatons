@@ -125,9 +125,12 @@ namespace FiniteAutomata.Visualizer
                 {
                     painter.DrawWarpedArrow(Source.Row, Source.Column.X + Source.Column.Width + 2, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }
-                else
+                else if(Depth >0)
                 {
                     painter.DrawWarpedArrow(Source.Row + 1, Source.Column.X, Target.Row + 1, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                }else
+                {
+                    painter.DrawWarpedArrow(Source.Row - 1, Source.Column.X, Target.Row - 1, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }
             }
         }
@@ -173,21 +176,41 @@ namespace FiniteAutomata.Visualizer
                     Row = target._row
                 };
 
-                var arrow = new Arrow(arrowBase, arrowHead, neighbour, _arrows.Count());
+                if(arrowBase.Column.X < arrowHead.Column.X)
+                {
+                    AddForwardArrow(arrowBase, arrowHead, neighbour);
+                }else
+                {
+                    AddBackwardArrow(arrowBase, arrowHead, neighbour);
+                }
+            }
 
+            private void AddForwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
+            {
+                var arrow = new Arrow(arrowBase, arrowHead, neighbour, _arrows.Count());
                 _arrows.Add(arrow);
             }
 
+            private void AddBackwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
+            {
+                var arrow = new Arrow(arrowBase, arrowHead, neighbour, - _backArrows.Count() - 1);
+                _backArrows.Add(arrow);
+            }
+            
             public int X => _grid.GetX(this);
 
             public int Width => State.Description.Length;
 
-            public int LongestArrowLength => _arrows.Select(a => a.Width).Max();
+            public int LongestArrowLength => _arrows.Union(_backArrows).Select(a => a.Width).Union(new List<int> { 5}).Max();
 
             public void Draw(IPainter painter)
             {
                 painter.DrawNode(_row, X, State.Description);
                 foreach(var arrow in _arrows)
+                {
+                    arrow.Draw(painter);
+                }
+                foreach(var arrow in _backArrows)
                 {
                     arrow.Draw(painter);
                 }
