@@ -95,7 +95,7 @@ namespace FiniteAutomata.Visualizer
                 var totalWidth = 0;
                 for(int i=0; i< index; i++)
                 {
-                    totalWidth += _columns[i].Width;
+                    totalWidth += _columns[i].Width + _columns[i].LongestArrowLength;
                 }
                 return totalWidth;
             }
@@ -116,11 +116,18 @@ namespace FiniteAutomata.Visualizer
                 Neighbour = neighbour;
             }
             
-            public int Width => Neighbour.Width;
+            public int Width => Neighbour.Width + 4;
 
             public void Draw(IPainter painter)
             {
-                painter.DrawWarpedArrow(Source.Row, Source.Column.X, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                if(Source.Row== Target.Row)
+                {
+                    painter.DrawWarpedArrow(Source.Row, Source.Column.X + Source.Column.Width + 2, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                }
+                else
+                {
+                    painter.DrawWarpedArrow(Source.Row, Source.Column.X, Target.Row, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                }
             }
         }
         
@@ -156,13 +163,13 @@ namespace FiniteAutomata.Visualizer
                 var arrowBase = new ArrowBase
                 {
                     Column = this,
-                    Row = _row - 1
+                    Row = _row
                 };
 
                 var arrowHead = new ArrowHead
                 {
                     Column = target,
-                    Row = target._row - 1
+                    Row = target._row
                 };
 
                 var arrow = new Arrow(arrowBase, arrowHead, neighbour, _arrows.Count());
@@ -172,7 +179,9 @@ namespace FiniteAutomata.Visualizer
 
             public int X => _grid.GetX(this);
 
-            public int Width => _arrows.Select(cell => cell.Width).Max();
+            public int Width => State.Description.Length;
+
+            public int LongestArrowLength => _arrows.Select(a => a.Width).Max();
 
             public void Draw(IPainter painter)
             {

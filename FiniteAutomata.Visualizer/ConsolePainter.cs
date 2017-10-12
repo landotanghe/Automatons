@@ -11,7 +11,7 @@ namespace FiniteAutomata.Visualizer
 
             DrawWarpedArrow(row1, col1, row2, col2, depth);
 
-            if (depth > 0)
+            if (depth >= 0)
             {
                 DrawSymbols(row1 + depth, col1 + 1, symbols, epsilon);
             }else
@@ -53,7 +53,7 @@ namespace FiniteAutomata.Visualizer
 
             if(depth == 0)
             {
-                Draw(row2, col2, '>');
+                Draw(row2, col2 - 1, '>');
             }
             else if(depth < 0)
             {
@@ -112,6 +112,8 @@ namespace FiniteAutomata.Visualizer
         {
             Console.CursorTop = row;
             Console.CursorLeft = col;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.Write($"({description})");
         }
     }

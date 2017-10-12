@@ -61,6 +61,6 @@ namespace FiniteAutomata.Visualizer
 
         public string Description => State.Description;
 
-        public int Width => Description.Length + 4 + Symbols.Count + (IsEpsilonIncluded ? 1 : 0);
+        public int Width => Description.Length + Symbols.Count + (IsEpsilonIncluded ? 1 : 0);
     }
 }

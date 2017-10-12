@@ -11,6 +11,8 @@ namespace TestVisualizer
                 .State("a").ActiveAtStart()
                 .Transition().On('x').From("a").To("b")
                 .State("b").Final()
+                .Transition().On('y').From("b").To("c")
+                .State("c")
                 .Build();
             var visualizer = new AutomatonVisualizer();
             visualizer.Visualize(automaton);
