@@ -9,6 +9,7 @@ namespace TestVisualizer
     {
         private const string Subsequence1 = "Subsequence1";
         private const string Subsequence2 = "Subsequence2";
+        private const string Subsequence3 = "Subsequence3";
         private const string Start = "start";
         private const string Source1 = "source1";
         private const string Source2 = "source2";
@@ -23,7 +24,7 @@ namespace TestVisualizer
             Console.BufferWidth = 2000;
             
             var visualizer = new AutomatonVisualizer();
-            visualizer.Visualize(Case2());
+            visualizer.Visualize(Case_Repeated_AB());
             while (true)
             {
             }
@@ -47,6 +48,46 @@ namespace TestVisualizer
                 .Transition().On('c').From(Subsequence1).To(Target1).Build();
         }
 
+
+        private static Automaton<string, char> Case_Repeated_AB()
+        {
+            var subSequence = Repeated_AB();
+            subSequence = Nest(subSequence);
+            subSequence = Nest(subSequence);
+
+            return subSequence.Build();
+        }
+
+        private static IAutomatonBuilder<string, char> Nest(IAutomatonBuilder<string, char> subSequence)
+        {
+            return new AutomatonBuilder<string, char>()
+                            .State(Start).ActiveAtStart()
+                            .State(Target1).Final()
+                            .SubSequence(subSequence, Subsequence1)
+                            .Transition().OnEpsilon().From(Start).To(Subsequence1)
+                            .Transition().OnEpsilon().From(Subsequence1).To(Target1);
+        }
+
+        private static IAutomatonBuilder<string, char> Repeated_AB()
+        {
+            var subSequence = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .State(Source1)
+                .State(Target1).Final()
+                .Transition().On('a').From(Start).To(Source1)
+                .Transition().On('b').From(Source1).To(Target1);
+
+            return new AutomatonBuilder<string, char>()
+                .State(Start).ActiveAtStart()
+                .State(Target1).Final()
+                .SubSequence(subSequence, Subsequence1)
+                .SubSequence(subSequence, Subsequence2)
+                .SubSequence(subSequence, Subsequence3)
+                .Transition().OnEpsilon().From(Start).To(Subsequence1)
+                .Transition().OnEpsilon().From(Subsequence1).To(Subsequence2)
+                .Transition().OnEpsilon().From(Subsequence2).To(Subsequence3)
+                .Transition().OnEpsilon().From(Subsequence3).To(Target1);
+        }
 
         private static Automaton<string, char> Case2()
         {

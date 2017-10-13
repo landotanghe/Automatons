@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace FiniteAutomota.NonDeterministic.Builder
@@ -17,11 +16,15 @@ namespace FiniteAutomota.NonDeterministic.Builder
         /// <summary>
         /// When creating multiple builds the states should be separate objects and not references to the same State
         /// </summary>
-        public void CreateNewStates()
+        public void Reset()
         {
             foreach(var state in StatesToAdd)
             {
-                state.Recreate();
+                state.Reset();
+            }
+            foreach(var subSequence in SubsequencesToAdd)
+            {
+                subSequence.Reset();
             }
         }
 

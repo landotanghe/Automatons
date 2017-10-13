@@ -26,7 +26,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
             return this;
         }
 
-        internal void Recreate()
+        internal void Reset()
         {
             StateToBuild = new State<Descriptor, Symbol>(StateToBuild.Description);
         }

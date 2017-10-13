@@ -2,9 +2,13 @@
 {
     public class AddSubSequenceStep<Descriptor, Symbol>
     {
-        internal IAutomatonBuilder<Descriptor, Symbol> SubSequenceBuilder;
         internal Descriptor Description;
+        internal Automaton<Descriptor, Symbol> SubSequence { get; private set; }
+        internal IAutomatonBuilder<Descriptor, Symbol> SubSequenceBuilder;
 
-        internal Automaton<Descriptor, Symbol> SubSequence;
+        internal void Reset()
+        {
+            SubSequence = SubSequenceBuilder.Build();
+        }
     }
 }
