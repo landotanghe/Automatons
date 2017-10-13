@@ -27,7 +27,7 @@ namespace FiniteAutomata.Visualizer
             return actualDepth <= maxDepth;
         }
 
-        private static void DrawSymbols(int row, int col, char[] symbols, bool epsilon)
+        private void DrawSymbols(int row, int col, char[] symbols, bool epsilon)
         {
             for (int i = 0; i < symbols.Length; i++)
             {
@@ -97,15 +97,14 @@ namespace FiniteAutomata.Visualizer
             }
         }
 
-        private static void Draw(int row, int col, char character)
+        private void Draw(int row, int col, char character)
         {
             Draw(row, col, character, ConsoleColor.White, ConsoleColor.Black);
         }
 
-        private static void Draw(int row, int col, char character, ConsoleColor fore, ConsoleColor back)
+        private void Draw(int row, int col, char character, ConsoleColor fore, ConsoleColor back)
         {
-            Console.CursorTop = row;
-            Console.CursorLeft = col;
+            MovePen(row, col);
             Console.ForegroundColor = fore;
             Console.BackgroundColor = back;
             Console.Write(character);
@@ -113,11 +112,16 @@ namespace FiniteAutomata.Visualizer
 
         public void DrawNode(int row, int col, string description)
         {
-            Console.CursorTop = row;
-            Console.CursorLeft = col;
-            Console.ForegroundColor = ConsoleColor.White;
+            MovePen(row, col);
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write($"({description})");
+        }
+
+        public void MovePen(int row, int col)
+        {
+            Console.CursorTop = row + 5;
+            Console.CursorLeft = col;
         }
     }
 }

@@ -99,6 +99,23 @@ namespace FiniteAutomata.Visualizer
                 }
                 return totalWidth;
             }
+
+            internal List<StatesColumn> ColumnsInRange(StatesColumn column1, StatesColumn column2)
+            {
+                int index1 = _columnsIndex[column1];
+                int index2 = _columnsIndex[column2];
+
+                return index1 < index2
+                    ? ColumnsInRange(index1, index2)
+                    : ColumnsInRange(index2, index1);
+            }
+
+            private List<StatesColumn> ColumnsInRange(int index1, int index2)
+            {
+                var keys = _columns.Keys.Where(col => col >= index1 && col <= index2);
+                return keys.Select(col => _columns[col])
+                    .ToList();
+            }
         }
 
 
@@ -127,10 +144,10 @@ namespace FiniteAutomata.Visualizer
                 }
                 else if(Depth >0)
                 {
-                    painter.DrawWarpedArrow(Source.Row + 1, Source.Column.X, Target.Row + 1, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                    painter.DrawWarpedArrow(Source.Row + 1, Source.Column.X, Target.Row + 1, Target.Column.X - 2, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }else
                 {
-                    painter.DrawWarpedArrow(Source.Row - 1, Source.Column.X, Target.Row - 1, Target.Column.X, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
+                    painter.DrawWarpedArrow(Source.Row - 1, Source.Column.X, Target.Row - 1, Target.Column.X+ 2, Depth, Neighbour.Symbols.ToArray(), Neighbour.IsEpsilonIncluded);
                 }
             }
         }
@@ -159,8 +176,8 @@ namespace FiniteAutomata.Visualizer
                 _row = row;
             }
 
-            private List<Arrow> _arrows = new List<Arrow>();
-            private List<Arrow> _backArrows = new List<Arrow>();//TODO use this
+            public List<Arrow> _arrows = new List<Arrow>();
+            public List<Arrow> _backArrows = new List<Arrow>();//TODO use this
 
             public void Add(StatesColumn target, Neighbour neighbour)
             {
@@ -185,15 +202,43 @@ namespace FiniteAutomata.Visualizer
                 }
             }
 
+            public int _depth = 0;
+            public int _backDepth = -1;
+
             private void AddForwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
             {
-                var arrow = new Arrow(arrowBase, arrowHead, neighbour, _arrows.Count());
+                var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
+                var depths = columns.SelectMany(c => c._arrows).Select(a => a.Depth).Distinct().ToList();
+                int depth = _depth;
+                while (depths.Contains(depth))
+                {
+                    depth++;
+                }
+                foreach(var col in columns)
+                {
+                    col._depth = depth;
+                }
+
+                var arrow = new Arrow(arrowBase, arrowHead, neighbour, depth);
+
                 _arrows.Add(arrow);
             }
 
             private void AddBackwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
             {
-                var arrow = new Arrow(arrowBase, arrowHead, neighbour, - _backArrows.Count() - 1);
+                var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
+                var depths = columns.SelectMany(c => c._backArrows).Select(a => a.Depth).Distinct().ToList();
+                int depth = _backDepth;
+                while (depths.Contains(depth))
+                {
+                    depth--;
+                }
+                foreach (var col in columns)
+                {
+                    col._backDepth = depth;
+                }
+
+                var arrow = new Arrow(arrowBase, arrowHead, neighbour, depth);
                 _backArrows.Add(arrow);
             }
             

@@ -21,44 +21,9 @@ namespace TestVisualizer
         static void Main(string[] args)
         {
             Console.BufferWidth = 2000;
-
-            var subsequence = new AutomatonBuilder()
-                .State("a").ActiveAtStart()
-                .Transition().On('x').From("a").To("b")
-                .State("b").Final();
-
-            var Start = "start";
-            var Target = "Target";
-            var builder = new AutomatonBuilder()
-                .State(Start).ActiveAtStart()
-                .Transition().On('x').From(Start).To(Target)
-                .State(Target).Final();
-
-       //     var automaton1 = builder.Build();
-        //    var automaton2 = builder.Build();
-
-
-            var automaton = new AutomatonBuilder()
-                .State("S").ActiveAtStart()
-                .SubSequence(subsequence, "seq1")
-                .SubSequence(subsequence, "seq3")
-                .Transition().OnEpsilon().From("S").To("seq1")
-                .Transition().On('x').From("seq1").To("X")
-                .SubSequence(subsequence, "X")
-                //.State("X")
-                .Transition().OnEpsilon().From("X").To("seq3")
-                .Transition().OnEpsilon().From("seq3").To("E")
-                .State("E")
-                .Build();
-
-
-
+            
             var visualizer = new AutomatonVisualizer();
-            visualizer.Visualize(Case1());
-            //var painter = new ConsolePainter();
-            //painter.DrawWarpedArrow(3, 3, 6, 16, 5, new char[]{'a',' ' }, false);
-            //painter.DrawWarpedArrow(3, 6, 6, 13, 3, new char[] { 'b', ' ' }, true);
-         //   painter.DrawWarpedArrow( 6, 13, 3, 6, -3, new char[] { 'b', ' ' });
+            visualizer.Visualize(Case2());
             while (true)
             {
             }
@@ -72,7 +37,7 @@ namespace TestVisualizer
                 .State(Target1).Final()
                 .Transition().On('b').From(Start).To(Target1);
 
-            return (new AutomatonBuilder<string,char>())
+            return (new AutomatonBuilder<string, char>())
                 .State(Start).ActiveAtStart()
                 .State(Target1).Final()
                 .SubSequence(subSequence, Subsequence1)
@@ -80,6 +45,35 @@ namespace TestVisualizer
                 .Transition().On('a').From(Start).To(Subsequence1)
                 .Transition().OnEpsilon().From(Subsequence1).To(Subsequence2)
                 .Transition().On('c').From(Subsequence1).To(Target1).Build();
+        }
+
+
+        private static Automaton<string, char> Case2()
+        {
+
+            var subSequence = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .State(Target1).Final()
+                .Transition().On('b').From(Start).To(Target1);
+
+            return (new AutomatonBuilder<string, char>())
+                .State(Start).ActiveAtStart()
+                .State(Source1)
+                .State(Source2)
+                .State(Target1).Final()
+                .State(Target2).Final()
+                .SubSequence(subSequence, Subsequence1)
+                .SubSequence(subSequence, Subsequence2)
+                .Transition().On('a').From(Start).To(Subsequence1)
+                .Transition().OnEpsilon().From(Subsequence1).To(Source1)
+                .Transition().OnEpsilon().From(Source1).To(Source2)
+                .Transition().OnEpsilon().From(Source2).To(Target1)
+                .Transition().On('x').From(Subsequence1).To(Target2)
+                .Transition().On('c').From(Target1).To(Target2)
+                .Transition().On('d').From(Source1).To(Target2)
+                .Transition().OnEpsilon().From(Target2).To(Target1)
+                .Transition().OnEpsilon().From(Target2).To(Source1)
+                .Build();
         }
     }
 }
