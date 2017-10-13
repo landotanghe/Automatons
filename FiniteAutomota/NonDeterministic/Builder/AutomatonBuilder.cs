@@ -24,6 +24,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
 
         public Automaton<Descriptor, Symbol> Build()
         {
+            StatesDefined.CreateNewStates();
             var userDefinedStartStates = StatesDefined.UserDefinedStartStates();
             if (!userDefinedStartStates.Any())
             {
@@ -60,7 +61,7 @@ namespace FiniteAutomota.NonDeterministic.Builder
         {
             var subSequenceStep = new AddSubSequenceStep<Descriptor, Symbol>
             {
-                SubSequenceBuilder = subSequence,
+                SubSequence = subSequence.Build(),
                 Description = description
             };
             StatesDefined.AddSubsequence(subSequenceStep);

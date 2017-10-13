@@ -112,5 +112,52 @@ namespace FiniteAutomata.Test.NonDeterministic
                 .Transition().OnEpsilon().From(Start).To(Target)
                 .Build();
         }
+
+        [TestMethod]
+        public void AutomatonNotInFinalState_IsNotAccepted()
+        {
+            var builder = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .Transition().On('x').From(Start).To(Target)
+                .State(Target);
+
+            var automaton1 = builder.Build();
+
+            automaton1.Process('x');
+
+            Assert.AreEqual(false, automaton1.IsAccepted());
+        }
+
+        [TestMethod]
+        public void AutomatonInFinalState_IsAccepted()
+        {
+            var builder = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .Transition().On('x').From(Start).To(Target)
+                .State(Target).Final();
+
+            var automaton1 = builder.Build();
+
+            automaton1.Process('x');
+
+            Assert.AreEqual(true, automaton1.IsAccepted());
+        }
+
+        [TestMethod]
+        public void BuildMultiple_DifferentStates()
+        {
+            var builder = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .Transition().On('x').From(Start).To(Target)
+                .State(Target).Final();
+
+            var automaton1 = builder.Build();
+            var automaton2 = builder.Build();
+
+            automaton1.Process('x');
+
+            Assert.AreEqual(true, automaton1.IsAccepted());
+            Assert.AreEqual(false, automaton2.IsAccepted());
+        }
     }
 }

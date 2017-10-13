@@ -14,6 +14,17 @@ namespace FiniteAutomota.NonDeterministic.Builder
             StatesToAdd.Add(state);
         }
 
+        /// <summary>
+        /// When creating multiple builds the states should be separate objects and not references to the same State
+        /// </summary>
+        public void CreateNewStates()
+        {
+            foreach(var state in StatesToAdd)
+            {
+                state.Recreate();
+            }
+        }
+
         public void AddSubsequence(AddSubSequenceStep<Descriptor,Symbol> seq)
         {
             SubsequencesToAdd.Add(seq);

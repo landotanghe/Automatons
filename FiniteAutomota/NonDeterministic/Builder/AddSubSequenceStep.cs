@@ -5,6 +5,6 @@
         internal IAutomatonBuilder<Descriptor, Symbol> SubSequenceBuilder;
         internal Descriptor Description;
 
-        internal Automaton<Descriptor, Symbol> SubSequence => SubSequenceBuilder.Build();
+        internal Automaton<Descriptor, Symbol> SubSequence;
     }
 }

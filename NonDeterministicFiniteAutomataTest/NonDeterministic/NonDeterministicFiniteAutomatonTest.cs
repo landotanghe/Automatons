@@ -214,7 +214,7 @@ namespace FiniteAutomata.Test.NonDeterministic
                 .SubSequence(subSequence, Subsequence2)
                 .Transition().On('a').From(Start).To(Subsequence1)
                 .Transition().OnEpsilon().From(Subsequence1).To(Subsequence2)
-                .Transition().On('c').From(Subsequence1).To(Target1)
+                .Transition().On('c').From(Subsequence2).To(Target1)
                 .Build();
 
             Assert.IsFalse(automaton.IsAccepted());

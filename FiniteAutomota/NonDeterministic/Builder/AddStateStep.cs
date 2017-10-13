@@ -1,4 +1,5 @@
-﻿namespace FiniteAutomota.NonDeterministic.Builder
+﻿
+namespace FiniteAutomota.NonDeterministic.Builder
 {
     public class AddStateStep<Descriptor, Symbol> : IAutomatonBuilder<Descriptor, Symbol>
     {
@@ -23,6 +24,11 @@
         {
             IsFinal = true;
             return this;
+        }
+
+        internal void Recreate()
+        {
+            StateToBuild = new State<Descriptor, Symbol>(StateToBuild.Description);
         }
 
         public AddStateStep<Descriptor, Symbol> State(Descriptor description)
