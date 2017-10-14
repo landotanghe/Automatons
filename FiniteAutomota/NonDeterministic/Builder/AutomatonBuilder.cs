@@ -36,9 +36,8 @@ namespace FiniteAutomota.NonDeterministic.Builder
                 transitions.AddToSource(StatesDefined);
             }
 
-            var startStates = _closureCalculator.GetClosureFor(userDefinedStartStates);
             var finalSTates = StatesDefined.FinalStates();
-            var automaton = new Automaton<Descriptor, Symbol>(startStates, finalSTates, _closureCalculator);
+            var automaton = new Automaton<Descriptor, Symbol>(userDefinedStartStates, finalSTates, _closureCalculator);
 
             return automaton;
         }

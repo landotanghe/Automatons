@@ -172,6 +172,8 @@ namespace FiniteAutomata.Visualizer
         public class StatesColumn
         {
             public State<string,char> State;
+            private List<int> _depthsUsed;
+
             private StatesGrid _grid;
             private int _row;
             public StatesColumn(State<string,char> state, StatesGrid grid, int row)
@@ -179,6 +181,7 @@ namespace FiniteAutomata.Visualizer
                 State = state;
                 _grid = grid;
                 _row = row;
+                _depthsUsed = new List<int>();
             }
 
             public List<Arrow> _arrows = new List<Arrow>();
@@ -206,22 +209,26 @@ namespace FiniteAutomata.Visualizer
                     AddBackwardArrow(arrowBase, arrowHead, neighbour);
                 }
             }
-
-            public int _depth = 0;
-            public int _backDepth = -1;
+            
 
             private void AddForwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour<string, char> neighbour)
             {
                 var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
-                var depths = columns.SelectMany(c => c._arrows).Select(a => a.Depth).Distinct().ToList();
-                int depth = _depth;
-                while (depths.Contains(depth))
+                int depth = 1;
+                if(columns.Count == 2 && arrowHead.Column._depthsUsed.Count() == 0)
                 {
-                    depth++;
+                    depth = 0;
                 }
-                foreach(var col in columns)
+                else
                 {
-                    col._depth = depth;
+                    while (columns.Any(c => c._depthsUsed.Contains(depth)))
+                    {
+                        depth++;
+                    }
+                    foreach (var column in columns)
+                    {
+                        column._depthsUsed.Add(depth);
+                    }
                 }
 
                 var arrow = new Arrow(arrowBase, arrowHead, neighbour, depth);
@@ -232,15 +239,14 @@ namespace FiniteAutomata.Visualizer
             private void AddBackwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour<string, char> neighbour)
             {
                 var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
-                var depths = columns.SelectMany(c => c._backArrows).Select(a => a.Depth).Distinct().ToList();
-                int depth = _backDepth;
-                while (depths.Contains(depth))
+                int depth = 1;
+                while (columns.Any(c => c._depthsUsed.Contains(depth)))
                 {
                     depth--;
                 }
-                foreach (var col in columns)
+                foreach (var column in columns)
                 {
-                    col._backDepth = depth;
+                    column._depthsUsed.Add(depth);
                 }
 
                 var arrow = new Arrow(arrowBase, arrowHead, neighbour, depth);

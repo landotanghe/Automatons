@@ -15,9 +15,9 @@ namespace FiniteAutomota.NonDeterministic
         {
             _startStates = startStates.ToList();
             _acceptingStates = acceptingStates.ToList();
-            Reset();
-
             _closureCalculator = closureCalculator;
+
+            Reset();
         }
         
         internal List<State<Descriptor, Symbol>> StartStates => _startStates;
@@ -25,7 +25,8 @@ namespace FiniteAutomota.NonDeterministic
 
         public void Reset()
         {
-            CurrentStates = _startStates.AsEnumerable().ToList();
+            var startStates = _closureCalculator.GetClosureFor(_startStates);
+            CurrentStates = startStates;
         }
 
         internal IEnumerable<State<Descriptor, Symbol>> GetActiveStates()

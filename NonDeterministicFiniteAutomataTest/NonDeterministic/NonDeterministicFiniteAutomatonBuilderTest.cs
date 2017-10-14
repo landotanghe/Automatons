@@ -168,51 +168,51 @@ namespace FiniteAutomata.Test.NonDeterministic
 
 
 
-        [TestMethod]
-        public void Build_Subsequence_SimplifiedToHaveNoEpsilons()
-        {
-            var subsequence = new AutomatonBuilder()
-                .State(Start).ActiveAtStart()
-                .Transition().On('x').From(Start).To(Target)
-                .State(Target).Final();
+        //[TestMethod]
+        //public void Build_Subsequence_SimplifiedToHaveNoEpsilons()
+        //{
+        //    var subsequence = new AutomatonBuilder()
+        //        .State(Start).ActiveAtStart()
+        //        .Transition().On('x').From(Start).To(Target)
+        //        .State(Target).Final();
 
-            var automaton = new AutomatonBuilder()
-                .State(Start).ActiveAtStart()
-                .SubSequence(subsequence, "subseq")
-                .Transition().On('x').From(Start).To("subseq")
-                .Transition().On('x').From("subseq").To(Target)
-                .State(Target).Build();
+        //    var automaton = new AutomatonBuilder()
+        //        .State(Start).ActiveAtStart()
+        //        .SubSequence(subsequence, "subseq")
+        //        .Transition().On('x').From(Start).To("subseq")
+        //        .Transition().On('x').From("subseq").To(Target)
+        //        .State(Target).Build();
 
-            Assert.AreEqual(1, automaton.StartStates);
-            Assert.AreEqual(1, automaton.GetActiveStates().Count());
-            Assert.AreEqual(1, automaton.FinalStates);
+        //    Assert.AreEqual(1, automaton.StartStates);
+        //    Assert.AreEqual(1, automaton.GetActiveStates().Count());
+        //    Assert.AreEqual(1, automaton.FinalStates);
             
-            automaton.Process('x');
-            Assert.AreEqual(1, automaton.GetActiveStates().Count());
-        }
+        //    automaton.Process('x');
+        //    Assert.AreEqual(1, automaton.GetActiveStates().Count());
+        //}
         
-        [TestMethod]
-        public void Build_MultipleEpsilons_SimplifiedToHaveNoEpsilons()
-        {
-            var automaton = new AutomatonBuilder()
-                .State(Start).ActiveAtStart()
-                .State(Node1)
-                .State(Node2)
-                .State(Node3)
-                .State(Node4)
-                .Transition().OnEpsilon().From(Start).To(Node1)
-                .Transition().OnEpsilon().From(Node1).To(Node2)
-                .Transition().On('x').From(Node2).To(Node3)
-                .Transition().OnEpsilon().From(Node3).To(Node4)
-                .Transition().OnEpsilon().From(Node4).To(Target)
-                .State(Target).Build();
+        //[TestMethod]
+        //public void Build_MultipleEpsilons_SimplifiedToHaveNoEpsilons()
+        //{
+        //    var automaton = new AutomatonBuilder()
+        //        .State(Start).ActiveAtStart()
+        //        .State(Node1)
+        //        .State(Node2)
+        //        .State(Node3)
+        //        .State(Node4)
+        //        .Transition().OnEpsilon().From(Start).To(Node1)
+        //        .Transition().OnEpsilon().From(Node1).To(Node2)
+        //        .Transition().On('x').From(Node2).To(Node3)
+        //        .Transition().OnEpsilon().From(Node3).To(Node4)
+        //        .Transition().OnEpsilon().From(Node4).To(Target)
+        //        .State(Target).Build();
 
-            Assert.AreEqual(1, automaton.StartStates);
-            Assert.AreEqual(1, automaton.GetActiveStates().Count());
-            Assert.AreEqual(1, automaton.FinalStates);
+        //    Assert.AreEqual(1, automaton.StartStates);
+        //    Assert.AreEqual(1, automaton.GetActiveStates().Count());
+        //    Assert.AreEqual(1, automaton.FinalStates);
 
-            automaton.Process('x');
-            Assert.AreEqual(1, automaton.GetActiveStates().Count());
-        }
+        //    automaton.Process('x');
+        //    Assert.AreEqual(1, automaton.GetActiveStates().Count());
+        //}
     }
 }
