@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace FiniteAutomata.Visualizer
 {
-    public class NeighboursFinder
+    public class NeighboursFinder<Descriptor, Symbol>
     {
-        public List<Neighbour> GetNeighbours(State<string, char> state)
+        public List<Neighbour<Descriptor, Symbol>> GetNeighbours(State<Descriptor, Symbol> state)
         {
             var symbols = state.GetKnownSymbols();
-            var neighbours = new Dictionary<State<string,char>, Neighbour>();
+            var neighbours = new Dictionary<State<Descriptor, Symbol>, Neighbour<Descriptor, Symbol>>();
             foreach(var symbol in symbols)
             {
                 var transition = state.GetTransitionFor(symbol);
@@ -17,7 +17,7 @@ namespace FiniteAutomata.Visualizer
                 {
                     if (!neighbours.ContainsKey(nextState))
                     {
-                        neighbours.Add(nextState, new Neighbour(nextState));
+                        neighbours.Add(nextState, new Neighbour<Descriptor, Symbol>(nextState));
                     }
                     neighbours[nextState].AddSymbol(symbol);
                 }
@@ -28,7 +28,7 @@ namespace FiniteAutomata.Visualizer
             {
                 if (!neighbours.ContainsKey(nextState))
                 {
-                    neighbours.Add(nextState, new Neighbour(nextState));
+                    neighbours.Add(nextState, new Neighbour<Descriptor, Symbol>(nextState));
                 }
                 neighbours[nextState].AddEpsilon();
             }
@@ -37,19 +37,19 @@ namespace FiniteAutomata.Visualizer
         }
     }
 
-    public class Neighbour
+    public class Neighbour<Descriptor, Symbol>
     {
-        public State<string, char> State;
-        public List<char> Symbols;
+        public State<Descriptor, Symbol> State;
+        public List<Symbol> Symbols;
         public bool IsEpsilonIncluded { get; private set; }
 
-        public Neighbour(State<string, char> state){
+        public Neighbour(State<Descriptor, Symbol> state){
             State = state;
-            Symbols = new List<char>();
+            Symbols = new List<Symbol>();
             IsEpsilonIncluded = false;
         }
         
-        public void AddSymbol(char symbol)
+        public void AddSymbol(Symbol symbol)
         {
             Symbols.Add(symbol);
         }
@@ -59,8 +59,6 @@ namespace FiniteAutomata.Visualizer
             IsEpsilonIncluded = true;
         }
 
-        public string Description => State.Description;
-
-        public int Width => Description.Length + Symbols.Count + (IsEpsilonIncluded ? 1 : 0);
+        public Descriptor Description => State.Description;
     }
 }

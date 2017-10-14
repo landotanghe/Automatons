@@ -1,8 +1,6 @@
 ﻿using FiniteAutomota.NonDeterministic;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-
 namespace FiniteAutomata.Visualizer
 {
     public class AutomatonVisualizer
@@ -17,7 +15,7 @@ namespace FiniteAutomata.Visualizer
 
         public class GridBuilder
         {
-            private NeighboursFinder _neighboursFinder = new NeighboursFinder();
+            private NeighboursFinder<string, char> _neighboursFinder = new NeighboursFinder<string, char>();
             private HashSet<State<string,char>> _visitedSets = new HashSet<State<string,char>>();
 
             private StatesGrid Grid = new StatesGrid();
@@ -26,14 +24,14 @@ namespace FiniteAutomata.Visualizer
             {
                 foreach (var startingState in automaton.StartStates)
                 {
-                    Visit(startingState, 0);
+                    Visit(startingState);
                     return Grid;//TODO multiple startingstates, jump to first free line or prepend columns...
                 }
 
                 return Grid;
             }
 
-            public void Visit(State<string,char> state, int depth)
+            private void Visit(State<string,char> state)
             {
                 if (HasVisited(state))
                     return;
@@ -41,14 +39,14 @@ namespace FiniteAutomata.Visualizer
                 _visitedSets.Add(state);
 
                 var neighbours = _neighboursFinder.GetNeighbours(state);
-                for(int i=0; i< neighbours.Count; i++)
+                for(int i=0; i < neighbours.Count; i++)
                 {
                     var neighbour = neighbours[i];
                     var column = Grid.Column(state);
                     var target = Grid.Column(neighbour.State);
                     column.Add(target, neighbour);
 
-                    Visit(neighbour.State, depth+1);
+                    Visit(neighbour.State);
                 }
             }
 
@@ -118,15 +116,17 @@ namespace FiniteAutomata.Visualizer
             }
         }
 
+        
+
 
         public class Arrow
         {
             public ArrowBase Source { get; }
             public ArrowHead Target { get; }
-            public Neighbour Neighbour { get; }
+            public Neighbour<string, char> Neighbour { get; }
             public int Depth { get; }
 
-            public Arrow(ArrowBase source, ArrowHead target, Neighbour neighbour, int depth)
+            public Arrow(ArrowBase source, ArrowHead target, Neighbour<string, char> neighbour, int depth)
             {
                 Source = source;
                 Target = target;
@@ -134,7 +134,12 @@ namespace FiniteAutomata.Visualizer
                 Depth = depth;
             }
             
-            public int Width => Neighbour.Width + 4;
+            public int Width => GetNeighbourWidth(Neighbour) + 4;
+
+            private int GetNeighbourWidth(Neighbour<string, char> neighbour)
+            {
+                return neighbour.Description.Length + neighbour.Symbols.Count + (neighbour.IsEpsilonIncluded ? 1 : 0);
+            }
 
             public void Draw(IPainter painter)
             {
@@ -179,7 +184,7 @@ namespace FiniteAutomata.Visualizer
             public List<Arrow> _arrows = new List<Arrow>();
             public List<Arrow> _backArrows = new List<Arrow>();//TODO use this
 
-            public void Add(StatesColumn target, Neighbour neighbour)
+            public void Add(StatesColumn target, Neighbour<string, char> neighbour)
             {
                 var arrowBase = new ArrowBase
                 {
@@ -205,7 +210,7 @@ namespace FiniteAutomata.Visualizer
             public int _depth = 0;
             public int _backDepth = -1;
 
-            private void AddForwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
+            private void AddForwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour<string, char> neighbour)
             {
                 var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
                 var depths = columns.SelectMany(c => c._arrows).Select(a => a.Depth).Distinct().ToList();
@@ -224,7 +229,7 @@ namespace FiniteAutomata.Visualizer
                 _arrows.Add(arrow);
             }
 
-            private void AddBackwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour neighbour)
+            private void AddBackwardArrow(ArrowBase arrowBase, ArrowHead arrowHead, Neighbour<string, char> neighbour)
             {
                 var columns = _grid.ColumnsInRange(arrowBase.Column, arrowHead.Column);
                 var depths = columns.SelectMany(c => c._backArrows).Select(a => a.Depth).Distinct().ToList();

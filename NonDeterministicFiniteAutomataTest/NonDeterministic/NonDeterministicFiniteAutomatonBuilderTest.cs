@@ -15,6 +15,12 @@ namespace FiniteAutomata.Test.NonDeterministic
         private const string Start = "start";
         private const string Source = "source";
         private const string Target = "target";
+
+        private const string Node1 = "node1";
+        private const string Node2 = "node2";
+        private const string Node3 = "node3";
+        private const string Node4 = "node4";
+
         private const string Closure = "closure";
 
         public IClosureCalculator _closureCalculator;
@@ -158,6 +164,55 @@ namespace FiniteAutomata.Test.NonDeterministic
 
             Assert.AreEqual(true, automaton1.IsAccepted());
             Assert.AreEqual(false, automaton2.IsAccepted());
+        }
+
+
+
+        [TestMethod]
+        public void Build_Subsequence_SimplifiedToHaveNoEpsilons()
+        {
+            var subsequence = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .Transition().On('x').From(Start).To(Target)
+                .State(Target).Final();
+
+            var automaton = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .SubSequence(subsequence, "subseq")
+                .Transition().On('x').From(Start).To("subseq")
+                .Transition().On('x').From("subseq").To(Target)
+                .State(Target).Build();
+
+            Assert.AreEqual(1, automaton.StartStates);
+            Assert.AreEqual(1, automaton.GetActiveStates().Count());
+            Assert.AreEqual(1, automaton.FinalStates);
+            
+            automaton.Process('x');
+            Assert.AreEqual(1, automaton.GetActiveStates().Count());
+        }
+        
+        [TestMethod]
+        public void Build_MultipleEpsilons_SimplifiedToHaveNoEpsilons()
+        {
+            var automaton = new AutomatonBuilder()
+                .State(Start).ActiveAtStart()
+                .State(Node1)
+                .State(Node2)
+                .State(Node3)
+                .State(Node4)
+                .Transition().OnEpsilon().From(Start).To(Node1)
+                .Transition().OnEpsilon().From(Node1).To(Node2)
+                .Transition().On('x').From(Node2).To(Node3)
+                .Transition().OnEpsilon().From(Node3).To(Node4)
+                .Transition().OnEpsilon().From(Node4).To(Target)
+                .State(Target).Build();
+
+            Assert.AreEqual(1, automaton.StartStates);
+            Assert.AreEqual(1, automaton.GetActiveStates().Count());
+            Assert.AreEqual(1, automaton.FinalStates);
+
+            automaton.Process('x');
+            Assert.AreEqual(1, automaton.GetActiveStates().Count());
         }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="NonDeterministic\Closure\ClosureCalculator.cs" />
     <Compile Include="NonDeterministic\Closure\IClosureCalculator.cs" />
     <Compile Include="NonDeterministic\State.cs" />
+    <Compile Include="NonDeterministic\Traverse\NeighboursFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

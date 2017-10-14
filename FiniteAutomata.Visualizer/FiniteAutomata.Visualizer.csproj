@@ -45,7 +45,6 @@
     <Compile Include="ConsolePainter.cs" />
     <Compile Include="Headspring\Enumeration.cs" />
     <Compile Include="IPainter.cs" />
-    <Compile Include="NeighboursFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
