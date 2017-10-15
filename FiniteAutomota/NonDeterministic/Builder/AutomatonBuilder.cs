@@ -43,9 +43,14 @@ namespace FiniteAutomota.NonDeterministic.Builder
         }
         
         public AddStateStep<Descriptor, Symbol> State(Descriptor description) {
+            var existingStateDefinition = StatesDefined.FindStateDefinitionOrDefault(description);
+            if(existingStateDefinition != null)
+            {
+                return existingStateDefinition;
+            }
+
             var stateDefinition = new AddStateStep<Descriptor, Symbol>(description, this);
             StatesDefined.AddState(stateDefinition);
-
             return stateDefinition;
         }
         

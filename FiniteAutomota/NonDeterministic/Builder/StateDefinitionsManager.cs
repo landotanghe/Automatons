@@ -38,6 +38,15 @@ namespace FiniteAutomota.NonDeterministic.Builder
             return EqualityComparer<Descriptor>.Default.Equals(description1, description2);
         }
 
+
+        public AddStateStep<Descriptor, Symbol> FindStateDefinitionOrDefault(Descriptor description)
+        {
+            return StatesToAdd
+                .Select(state => state)
+                .Where(state => Equals(state.StateToBuild.Description, description))
+                .SingleOrDefault();
+        }
+
         public State<Descriptor, Symbol> FindStateOrDefault(Descriptor description)
         {
             return StatesToAdd
